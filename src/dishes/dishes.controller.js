@@ -34,6 +34,7 @@ function bodyDataHas(propertyName) {
     next({ status: 400, message: `Dish must include a ${propertyName}` });
   };
 }
+
 function priceIsValid(req, res, next) {
   const { data: { price } = {} } = req.body;
   if (price <= 0 || !Number.isInteger(price)) {
@@ -67,13 +68,27 @@ function update(req, res) {
   const dish = res.locals.dish;
   const { data: { id, name, description, price, image_url } = {} } = req.body;
 
-  foundDish.id = id;
-  foundDish.name = name;
-  foundDish.description = description;
-  foundDish.price = price;
-  foundDish.image_url = image_url;
+  dish.id = id;
+  dish.name = name;
+  dish.description = description;
+  dish.price = price;
+  dish.image_url = image_url;
 
-  res.json({ data: paste });
+  res.json({ data: dish });
+}
+
+function idValidator(req, res, next) {
+  const { dishId } = req.params;
+  const { data: { id } = {} } = req.body;
+  const validId = id === dishId;
+
+  if (validId || id === "" || id === null || id === undefined) {
+    return next();
+  }
+  next({
+    status: 400,
+    message: `Dish id does not match route id. Dish: ${id}, Route: ${dishId}`,
+  });
 }
 
 module.exports = {
@@ -88,12 +103,13 @@ module.exports = {
   ],
   read: [dishExists, read],
   update: [
+    dishExists,
     bodyDataHas("name"),
     bodyDataHas("description"),
     bodyDataHas("price"),
     bodyDataHas("image_url"),
     priceIsValid,
-    dishExists,
-    update
+    idValidator,
+    update,
   ],
 };
