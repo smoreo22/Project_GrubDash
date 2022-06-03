@@ -65,16 +65,21 @@ function read(req, res) {
 }
 
 function update(req, res) {
-  const dish = res.locals.dish;
-  const { data: { id, name, description, price, image_url } = {} } = req.body;
+  const { id } = res.locals.dish;
+  Object.assign(res.locals.dish, req.body.data, {id});
+  res.json({ data: res.locals.dish });
 
-  dish.id = id;
-  dish.name = name;
-  dish.description = description;
-  dish.price = price;
-  dish.image_url = image_url;
 
-  res.json({ data: dish });
+  // const dish = res.locals.dish;
+  // const { data: { id, name, description, price, image_url } = {} } = req.body;
+
+  // dish.id = id;
+  // dish.name = name;
+  // dish.description = description;
+  // dish.price = price;
+  // dish.image_url = image_url;
+
+  // res.json({ data: dish });
 }
 
 function idValidator(req, res, next) {
