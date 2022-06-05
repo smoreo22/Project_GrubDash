@@ -27,6 +27,7 @@ function hasValidStatus(req, res, next) {
   const status = data.status;
   if(statusesValidator.includes(status)) {
     return next();
+
   }
   next({
     status: 400,
@@ -165,8 +166,6 @@ module.exports = {
     hasMobileNumber,
     hasDishes,
     hasValidStatus,
-    // verifyOrderStatus,
-    // verifyDish,
     idValidator,
     hasQuantity,
     update,

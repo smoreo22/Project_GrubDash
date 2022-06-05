@@ -35,6 +35,11 @@ function bodyDataHas(propertyName) {
   };
 }
 
+const hasName = bodyDataHas("name");
+const hasDescription = bodyDataHas("description");
+const hasPrice = bodyDataHas("price");
+const hasImage_url = bodyDataHas("image_url");
+
 function priceIsValid(req, res, next) {
   const { data: { price } = {} } = req.body;
   if (price <= 0 || !Number.isInteger(price)) {
@@ -66,9 +71,8 @@ function read(req, res) {
 
 function update(req, res) {
   const { id } = res.locals.dish;
-  Object.assign(res.locals.dish, req.body.data, {id});
+  Object.assign(res.locals.dish, req.body.data, { id });
   res.json({ data: res.locals.dish });
-
 
   // const dish = res.locals.dish;
   // const { data: { id, name, description, price, image_url } = {} } = req.body;
@@ -99,20 +103,20 @@ function idValidator(req, res, next) {
 module.exports = {
   list,
   create: [
-    bodyDataHas("name"),
-    bodyDataHas("description"),
-    bodyDataHas("price"),
-    bodyDataHas("image_url"),
+    hasName,
+    hasDescription,
+    hasPrice,
+    hasImage_url,
     priceIsValid,
     create,
   ],
   read: [dishExists, read],
   update: [
     dishExists,
-    bodyDataHas("name"),
-    bodyDataHas("description"),
-    bodyDataHas("price"),
-    bodyDataHas("image_url"),
+    hasName,
+    hasDescription,
+    hasPrice,
+    hasImage_url,
     priceIsValid,
     idValidator,
     update,
